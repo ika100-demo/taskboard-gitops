@@ -1,0 +1,25 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: taskboard-backups
+  labels:
+    app.kubernetes.io/name: backups
+    app.kubernetes.io/part-of: taskboard
+    app.kubernetes.io/managed-by: gitops-app
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false
+spec:
+  name: taskboard-backups
+  clusterRef:
+    name: taskboard-backups
+  reclaimPolicy: Retain
+  versioning: Suspended
+  owner: taskboard-backups
+  access:
+  - user: taskboard-backups
+    actions:
+    - Read
+    - Write
+    - List
+    - Tagging
+  adoptExisting: true
