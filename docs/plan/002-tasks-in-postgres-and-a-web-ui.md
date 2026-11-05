@@ -1,57 +1,82 @@
 ---
 plan_id: 002-tasks-in-postgres-and-a-web-ui
 spec: 002-tasks-in-postgres-and-a-web-ui
-feature: Keep tasks in Postgres (task-api) and add a web UI that lists and adds tasks (taskboard-web), wired by the gitops-app
+feature: Keep tasks in Postgres (task-api) and add a web UI that lists and adds tasks (taskboard-web),
+  wired by the gitops-app
 gitops_app: ika100-demo/taskboard-gitops
-status: draft
+status: completed
 repos:
-  - id: taskboard-gitops
-    shape: gitops-app
-    summary: Declare postgres for task-api, publish taskboard-web in dev and point it at task-api
-    acs: [AC-002.1, AC-002.2, AC-002.7]
-    arguments: |
-      Data only: /system:ship runs the gitops operations below with cplat resource add / cplat component set,
-      then `devbox run render`. Do not touch replicas: task-api stays at 1 instance in dev.
-    gitops:
-      - {resource: postgres}
-      - {uses: postgres, component: task-api}
-      - {expose: taskboard-web, host: taskboard-web}
-      - {env: {TASK_API_URL: 'http://task-api'}, component: taskboard-web}
-    depends_on: []
-    done: false
-  - id: task-api
-    shape: service-python
-    summary: Store tasks in Postgres instead of memory, answer 503 and report not ready while the database is down
-    acs: [AC-002.1, AC-002.2, AC-002.3, AC-002.4, AC-002.5, AC-002.6]
-    arguments: |
-      Replace the in-memory TaskStore (src/task_api/tasks/store.py) with a Postgres store behind the same
-      add()/list() interface; keep router.py and models.py and the spec 001 tests (adapt only the store fixture).
-      Driver: psycopg 3 with psycopg_pool (add "psycopg[binary]" and "psycopg-pool" through devbox/uv, never pip).
-      Connection: read DATABASE_URL (set by the gitops-app from the postgres resource; PG* vars are also present).
-      Schema: created by the service itself with idempotent DDL the first time a connection succeeds (not only
-      at import/startup, so a pod started while the database is down recovers without a restart), e.g.
-      tasks(seq bigint generated always as identity primary key, id uuid not null unique, title text not null,
-      due_date date null). Order GET /tasks by seq; never by a timestamp.
-      The process must start (and /health answer 200) while the database is down; only /ready and the task
-      routes report it. The single-uvicorn-process constraint of spec 001 is lifted.
-      Tests run against a real Postgres (testcontainers-python, Docker), not SQLite; the "database down" cases
-      stop the container or point the pool at a closed port. Spec 001's in-memory restart test (AC-001.9) is
-      superseded: delete it or turn it into the AC-002.1 test (new app instance, same database).
-    depends_on: [taskboard-gitops]
-    done: false
-  - id: taskboard-web
-    shape: web-nextjs
-    summary: Taskboard page that lists all tasks and adds a task through task-api
-    acs: [AC-002.7, AC-002.8, AC-002.9, AC-002.10, AC-002.11, AC-002.12, AC-002.13, AC-002.14, AC-002.15]
-    arguments: |
-      Replace the template home page (app/page.tsx and its feature cards) with the board. The browser never
-      calls task-api: the page is rendered on the server and the form posts to this app's own /api/tasks route
-      handler, which calls task-api (see Contract). Read TASK_API_URL at request time with process.env on the
-      server only (no NEXT_PUBLIC_ variable; the image is built once and configured per environment); default
-      http://localhost:8080 for `devbox run dev`. Keep /api/health and /api/ready independent of task-api.
-      Unit tests mock task-api with fetch mocks; Playwright e2e runs against a stub task-api server.
-    depends_on: []
-    done: false
+- id: taskboard-gitops
+  shape: gitops-app
+  summary: Declare postgres for task-api, publish taskboard-web in dev and point it at task-api
+  acs:
+  - AC-002.1
+  - AC-002.2
+  - AC-002.7
+  arguments: |
+    Data only: /system:ship runs the gitops operations below with cplat resource add / cplat component set,
+    then `devbox run render`. Do not touch replicas: task-api stays at 1 instance in dev.
+  gitops:
+  - resource: postgres
+  - uses: postgres
+    component: task-api
+  - expose: taskboard-web
+    host: taskboard-web
+  - env:
+      TASK_API_URL: http://task-api
+    component: taskboard-web
+  depends_on: []
+  done: true
+- id: task-api
+  shape: service-python
+  summary: Store tasks in Postgres instead of memory, answer 503 and report not ready while the database
+    is down
+  acs:
+  - AC-002.1
+  - AC-002.2
+  - AC-002.3
+  - AC-002.4
+  - AC-002.5
+  - AC-002.6
+  arguments: |
+    Replace the in-memory TaskStore (src/task_api/tasks/store.py) with a Postgres store behind the same
+    add()/list() interface; keep router.py and models.py and the spec 001 tests (adapt only the store fixture).
+    Driver: psycopg 3 with psycopg_pool (add "psycopg[binary]" and "psycopg-pool" through devbox/uv, never pip).
+    Connection: read DATABASE_URL (set by the gitops-app from the postgres resource; PG* vars are also present).
+    Schema: created by the service itself with idempotent DDL the first time a connection succeeds (not only
+    at import/startup, so a pod started while the database is down recovers without a restart), e.g.
+    tasks(seq bigint generated always as identity primary key, id uuid not null unique, title text not null,
+    due_date date null). Order GET /tasks by seq; never by a timestamp.
+    The process must start (and /health answer 200) while the database is down; only /ready and the task
+    routes report it. The single-uvicorn-process constraint of spec 001 is lifted.
+    Tests run against a real Postgres (testcontainers-python, Docker), not SQLite; the "database down" cases
+    stop the container or point the pool at a closed port. Spec 001's in-memory restart test (AC-001.9) is
+    superseded: delete it or turn it into the AC-002.1 test (new app instance, same database).
+  depends_on:
+  - taskboard-gitops
+  done: true
+- id: taskboard-web
+  shape: web-nextjs
+  summary: Taskboard page that lists all tasks and adds a task through task-api
+  acs:
+  - AC-002.7
+  - AC-002.8
+  - AC-002.9
+  - AC-002.10
+  - AC-002.11
+  - AC-002.12
+  - AC-002.13
+  - AC-002.14
+  - AC-002.15
+  arguments: |
+    Replace the template home page (app/page.tsx and its feature cards) with the board. The browser never
+    calls task-api: the page is rendered on the server and the form posts to this app's own /api/tasks route
+    handler, which calls task-api (see Contract). Read TASK_API_URL at request time with process.env on the
+    server only (no NEXT_PUBLIC_ variable; the image is built once and configured per environment); default
+    http://localhost:8080 for `devbox run dev`. Keep /api/health and /api/ready independent of task-api.
+    Unit tests mock task-api with fetch mocks; Playwright e2e runs against a stub task-api server.
+  depends_on: []
+  done: true
 gitops_pin: []
 ---
 
