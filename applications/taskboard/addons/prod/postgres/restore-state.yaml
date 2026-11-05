@@ -3,8 +3,3 @@ next: 2
 clusters:
 - name: taskboard-postgres
   role: active
-- name: taskboard-postgres-g1
-  role: restored
-  from:
-    server: taskboard-postgres
-    to: latest
