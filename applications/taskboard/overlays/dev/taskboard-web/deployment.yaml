@@ -31,6 +31,8 @@ spec:
           value: production
         - name: PORT
           value: '3000'
+        - name: TASK_API_URL
+          value: http://task-api
         resources:
           requests:
             cpu: 100m

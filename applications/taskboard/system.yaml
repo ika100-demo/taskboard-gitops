@@ -55,6 +55,8 @@ components:
       dev: {}
     expose:
       host: task-api
+    uses:
+      - postgres
   taskboard-web:
     type: website
     lang: typescript
@@ -71,6 +73,7 @@ components:
       next-cache: /app/.next/cache
     env:
       NODE_ENV: production
+      TASK_API_URL: http://task-api
     secretRefs: []
     resources:
       requests:
@@ -81,3 +84,15 @@ components:
         memory: 512Mi
     instances:
       dev: {}
+    expose:
+      host: taskboard-web
+resources:
+  postgres:
+    type: database
+    version: 17
+    replicas: 1
+    storage: 1Gi
+    instances:
+      prod:
+        replicas: 3
+        storage: 20Gi
