@@ -83,6 +83,8 @@ components:
         memory: 512Mi
     instances:
       dev: {}
+    expose:
+      host: taskboard-web
 resources:
   postgres:
     type: database
