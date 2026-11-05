@@ -1,7 +1,7 @@
 ---
 spec_id: 002-tasks-in-postgres-and-a-web-ui
 title: Tasks in Postgres and a web UI
-status: draft
+status: approved
 priority: P1
 shape: gitops-app
 ---
@@ -72,3 +72,4 @@ Web UI
 
 - 2026-11-05 created
 - 2026-11-05 amended: user answered all open questions, all as suggested; added AC-002.15 (web UI sends the title untrimmed); no other criteria changed
+- 2026-11-05 approved
