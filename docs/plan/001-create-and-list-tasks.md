@@ -3,19 +3,31 @@ plan_id: 001-create-and-list-tasks
 spec: 001-create-and-list-tasks
 feature: Create a task (title, optional due date) and list all tasks, held in memory in task-api
 gitops_app: ika100-demo/taskboard-gitops
-status: draft
+status: completed
 repos:
-  - id: task-api
-    shape: service-python
-    summary: Create and list tasks in memory (POST /tasks, GET /tasks)
-    acs: [AC-001.1, AC-001.2, AC-001.3, AC-001.4, AC-001.5, AC-001.6, AC-001.7, AC-001.8, AC-001.9, AC-001.10, AC-001.11, AC-001.12]
-    arguments: |
-      FastAPI app in src/task_api/main.py; add the routes there or in a new router module next to it.
-      The store is one process-wide in-memory list guarded by a lock; no database, no new dependency.
-      Keep the Dockerfile CMD as a single uvicorn process (no --workers): a second worker would hold a
-      second list and break the shared list just as a second replica would.
-    depends_on: []
-    done: false
+- id: task-api
+  shape: service-python
+  summary: Create and list tasks in memory (POST /tasks, GET /tasks)
+  acs:
+  - AC-001.1
+  - AC-001.2
+  - AC-001.3
+  - AC-001.4
+  - AC-001.5
+  - AC-001.6
+  - AC-001.7
+  - AC-001.8
+  - AC-001.9
+  - AC-001.10
+  - AC-001.11
+  - AC-001.12
+  arguments: |
+    FastAPI app in src/task_api/main.py; add the routes there or in a new router module next to it.
+    The store is one process-wide in-memory list guarded by a lock; no database, no new dependency.
+    Keep the Dockerfile CMD as a single uvicorn process (no --workers): a second worker would hold a
+    second list and break the shared list just as a second replica would.
+  depends_on: []
+  done: true
 gitops_pin: []
 ---
 
