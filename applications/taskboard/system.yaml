@@ -64,6 +64,7 @@ components:
       host: task-api
     uses:
       - postgres
+      - backups
   taskboard-web:
     type: website
     lang: typescript
@@ -104,3 +105,7 @@ resources:
       prod:
         replicas: 3
         storage: 20Gi
+  backups:
+    type: bucket
+    storage: 10Gi
+    versioning: false
