@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier; AVOID EDITING MANUALLY
+_src_path: gh:ika100/sdlc-foundry/templates/gitops-app
+app_name: taskboard
+cluster_server: https://kubernetes.default.svc
+description: GitOps repo for the taskboard system
+docker_registry: ghcr.io/ika100-demo
+github_org: ika100-demo
+owner: ika100-demo
+platform_marketplace_ref: main
+project_name: taskboard-gitops
+property_operators: install
+resource_metrics: provided
