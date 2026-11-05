@@ -81,3 +81,13 @@ components:
         memory: 512Mi
     instances:
       dev: {}
+resources:
+  postgres:
+    type: database
+    version: 17
+    replicas: 1
+    storage: 1Gi
+    instances:
+      prod:
+        replicas: 3
+        storage: 20Gi
