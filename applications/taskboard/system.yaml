@@ -19,10 +19,14 @@ environments:
   dev:
     host: "{component}.{system}-dev.localhost"
     policy: "off"
+    observability:
+      ui: lgtm
   staging:
     promote: after-dev-smoke
     policy: "off"
     host: '{component}.{system}-staging.localhost'
+    observability:
+      ui: lgtm
     # host: "{component}.staging.example.com"
   prod:
     policy: "off"
