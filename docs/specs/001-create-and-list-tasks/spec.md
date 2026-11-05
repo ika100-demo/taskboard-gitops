@@ -1,7 +1,7 @@
 ---
 spec_id: 001-create-and-list-tasks
 title: Create and list tasks
-status: draft
+status: approved
 priority: P1
 shape: gitops-app
 ---
@@ -60,3 +60,4 @@ As a taskboard user, I want to list all the tasks I created, so that I can see w
 
 - 2026-11-05 created
 - 2026-11-05 amended: user answered all open questions; added AC-001.10 (past due date accepted), AC-001.11 (title stored untrimmed), AC-001.12 (one shared list, single instance); replica non-goal reworded
+- 2026-11-05 approved
