@@ -64,6 +64,7 @@ components:
       host: task-api
     uses:
       - postgres
+      - backups
   taskboard-web:
     type: website
     lang: typescript

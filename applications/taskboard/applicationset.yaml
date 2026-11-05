@@ -95,6 +95,7 @@ spec:
   generators:
   - list:
       elements:
+      - name: backups
       - name: postgres
   template:
     metadata:
@@ -114,6 +115,12 @@ spec:
           selfHeal: true
         syncOptions:
         - CreateNamespace=true
+        retry:
+          limit: 10
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 10m
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -153,6 +160,7 @@ spec:
   generators:
   - list:
       elements:
+      - name: backups
       - name: postgres
   template:
     metadata:
@@ -172,6 +180,12 @@ spec:
           selfHeal: true
         syncOptions:
         - CreateNamespace=true
+        retry:
+          limit: 10
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 10m
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
