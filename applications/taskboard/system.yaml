@@ -107,6 +107,10 @@ resources:
       prod:
         replicas: 3
         storage: 20Gi
+        backup:
+          to: backups
+          schedule: "0 3 * * *"
+          retention: 30d
   backups:
     type: bucket
     storage: 10Gi

@@ -22,3 +22,11 @@ spec:
       memory: 256Mi
     limits:
       memory: 512Mi
+  postgresql:
+    parameters:
+      archive_timeout: 5min
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: taskboard-postgres
