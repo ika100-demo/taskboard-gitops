@@ -104,3 +104,7 @@ resources:
       prod:
         replicas: 3
         storage: 20Gi
+  backups:
+    type: bucket
+    storage: 10Gi
+    versioning: false
