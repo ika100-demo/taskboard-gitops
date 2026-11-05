@@ -6,7 +6,8 @@ metadata:
 spec:
   generators:
   - list:
-      elements: []
+      elements:
+      - name: task-api
   template:
     metadata:
       name: '{{name}}-dev'
